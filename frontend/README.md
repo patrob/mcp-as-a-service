@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Copy `.env.example` to `.env.local` and provide your Google OAuth credentials before starting the app.
+
 First, run the development server:
 
 ```bash
