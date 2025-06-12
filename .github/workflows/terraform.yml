@@ -1,0 +1,29 @@
+name: Terraform
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'iac/**'
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: iac
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v2
+      - name: Terraform Init
+        run: |
+          echo "terraform init would run here"
+          # terraform init
+      - name: Terraform Validate
+        run: |
+          echo "terraform validate would run here"
+          # terraform validate
+      - name: Terraform Plan
+        run: |
+          echo "terraform plan would run here"
+          # terraform plan
