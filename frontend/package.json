@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest"
+    "test": "vitest --run"
   },
   "dependencies": {
     "next": "15.3.3",
@@ -27,3 +27,4 @@
     "vitest": "^3.2.3"
   }
 }
+
