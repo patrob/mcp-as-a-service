@@ -26,6 +26,8 @@ This file defines the expectations and behavioral constraints for Codex when gen
   - Refactor with tests passing.
 
 - Adhere to the **DRY (Don't Repeat Yourself)** and **KISS (Keep It Simple, Stupid)** principles.
+- Always install dependencies via command line, i.e. `npm install <dependency>`
+- Always install dependencies before committing the code. We don't want the package-lock.json to get out of date.
 
 ## Formatting and Structure
 
@@ -49,3 +51,4 @@ This file defines the expectations and behavioral constraints for Codex when gen
 ---
 
 By adhering to these rules, the Codex agent will contribute clean, testable, and maintainable code in alignment with our engineering practices.
+
