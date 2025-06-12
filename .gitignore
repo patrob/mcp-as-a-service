@@ -2,3 +2,6 @@
 terraform.tfstate
 terraform.tfstate.*
 
+# .NET build artifacts
+**/bin/
+**/obj/
