@@ -36,6 +36,7 @@ This file defines the expectations and behavioral constraints for Codex when gen
 - Adhere to the **DRY (Don't Repeat Yourself)** and **KISS (Keep It Simple, Stupid)** principles.
 - Always install dependencies via command line, i.e. `npm install <dependency>`
 - Always install dependencies before committing the code. We don't want the package-lock.json to get out of date.
+- Prefer **Vertical Slicing**, grouping feature-specific files within a feature folder when possible.
 
 ## Formatting and Structure
 
