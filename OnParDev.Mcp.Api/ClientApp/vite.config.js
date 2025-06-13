@@ -7,6 +7,11 @@ import process from "process";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/setupTests.ts',
+  },
   server: {
     https: getHttpsSettings(),
     port: 5173,
