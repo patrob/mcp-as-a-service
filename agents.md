@@ -48,7 +48,23 @@ This file defines the expectations and behavioral constraints for Codex when gen
 - Every PR must include corresponding tests.
 - If asked to generate a PR, include a **summary of changes** and why the change was made.
 
----
+## C# Specific Guidelines
 
-By adhering to these rules, the Codex agent will contribute clean, testable, and maintainable code in alignment with our engineering practices.
+- Prefer interfaces defined at the top of implementation files
+  Ex:
+
+  ```c#
+  public interface IDoSomething
+  {
+    void DoSomething()
+  }
+
+  public class DoSomething : IDoSomething
+  {
+    public void DoSomething()
+    {
+      // do something
+    }
+  }
+  ```
 
