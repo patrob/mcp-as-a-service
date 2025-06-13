@@ -76,3 +76,18 @@ This file defines the expectations and behavioral constraints for Codex when gen
   }
   ```
 
+## ASP.NET API Structure
+
+- Prefer dependency injection.
+- Group services together in an extension method.
+- Prefer minimal API, with endpoints defined in extension method.
+- Basic Folder Structure:
+
+```
+OnParDev.Mcp.Api/
++-Config
+  +-Endpoints.cs # contains endpoints using Minimal API via extension methods
+  +-Services.cs # contains addition of services via IServiceCollection extension methods
++-ClientApp/ # holds the React App frontend.
+```
+
