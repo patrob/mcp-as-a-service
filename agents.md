@@ -4,10 +4,12 @@ This file defines the expectations and behavioral constraints for Codex when gen
 
 ## General Behavior
 
+- Always get latest with a `git pull` if working on an existing branch.
 - **Do not comment code unless explicitly asked.**
 - Use **descriptive and intention-revealing names**—avoid redundant comments.
 - Prioritize **readability** and **maintainability** over brevity.
 - Never add **binary files** (e.g. `.exe`, `.dll`, `.bin`, `.jpg`, `.png`, `.pdf`) to the repository.
+- Avoid packages and modules that have licensing that requires attribution or money and/or commercial licensing.
 
 ## Development Guidelines
 
@@ -25,6 +27,8 @@ This file defines the expectations and behavioral constraints for Codex when gen
   - Implement just enough code to pass the test.
   - Refactor with tests passing.
 
+- Prefer **Clean Code** always.
+- Follow advice from **The Pragmatic Programmer**.
 - Adhere to the **DRY (Don't Repeat Yourself)** and **KISS (Keep It Simple, Stupid)** principles.
 - Always install dependencies via command line, i.e. `npm install <dependency>`
 - Always install dependencies before committing the code. We don't want the package-lock.json to get out of date.
@@ -50,7 +54,27 @@ This file defines the expectations and behavioral constraints for Codex when gen
 
 ## C# Specific Guidelines
 
+- Prefer composition over inheritance when possible.
+- For services, use interfaces for enabling mocking in tests.
+- Separate Unit & Integration Tests into separate folders within the Tests project.
+- Don't reuse state or contexts between tests, all tests should be isolated and run individually or collectively and give the same result.
 - Prefer interfaces defined at the top of implementation files
+  Ex:
+
+  ```c#
+  public interface IDoSomething
+  {
+    void DoSomething()
+  }
+
+  public class DoSomething : IDoSomething
+  {
+    public void DoSomething()
+    {
+      // do something
+    }
+  }
+  ```
   Ex:
 
   ```c#
