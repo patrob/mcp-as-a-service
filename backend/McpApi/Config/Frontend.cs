@@ -8,7 +8,7 @@ public static class Frontend
 {
     public static WebApplication UseFrontend(this WebApplication app, IWebHostEnvironment env)
     {
-        var path = Path.Combine(env.ContentRootPath, "..", "frontend", "out");
+        var path = Path.Combine(env.ContentRootPath, "..", "frontend", "dist");
         if (!Directory.Exists(path))
         {
             return app;
