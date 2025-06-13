@@ -35,6 +35,11 @@ jobs:
         working-directory: backend
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: frontend/.nvmrc
+      - name: Install frontend dependencies
+        run: npm ci --prefix ../frontend
       - uses: actions/setup-dotnet@v4
         with:
           global-json-file: backend/global.json

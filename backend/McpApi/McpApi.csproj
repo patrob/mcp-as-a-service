@@ -12,4 +12,8 @@
     <PackageReference Include="Scalar.AspNetCore" />
   </ItemGroup>
 
+  <Target Name="BuildFrontend" BeforeTargets="Build">
+    <Exec Command="npm run build --prefix $(MSBuildThisFileDirectory)..\..\frontend" />
+  </Target>
+
 </Project>
