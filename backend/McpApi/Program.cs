@@ -11,14 +11,11 @@ builder.Services.AddCorsPolicies();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger(options =>
 {
-    app.UseSwagger(options =>
-    {
-        options.RouteTemplate = "/openapi/{documentName}.json";
-    });
-    app.MapScalarApiReference();
-}
+    options.RouteTemplate = "/openapi/{documentName}.json";
+});
+app.MapScalarApiReference("/scalar");
 
 app.UseCors();
 
