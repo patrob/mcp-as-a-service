@@ -11,6 +11,10 @@ This file defines the expectations and behavioral constraints for Codex when gen
 - Never add **binary files** (e.g. `.exe`, `.dll`, `.bin`, `.jpg`, `.png`, `.pdf`) to the repository.
 - Avoid packages and modules that have licensing that requires attribution or money and/or commercial licensing.
 
+## PR Guidelines
+
+- Prefer to add screenshot to PR Description if possible.
+
 ## Development Guidelines
 
 - Always follow the **SOLID principles**:
