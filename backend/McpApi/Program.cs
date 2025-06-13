@@ -1,4 +1,3 @@
-using Microsoft.Extensions.FileProviders;
 using McpApi.Config;
 using Scalar.AspNetCore;
 
@@ -19,15 +18,7 @@ app.MapScalarApiReference("/scalar");
 
 app.UseCors();
 
-var frontendPath = Path.Combine(builder.Environment.ContentRootPath, "..", "frontend", "out");
-if (Directory.Exists(frontendPath))
-{
-    app.UseDefaultFiles();
-    app.UseStaticFiles(new StaticFileOptions
-    {
-        FileProvider = new PhysicalFileProvider(frontendPath)
-    });
-}
+app.UseFrontend(builder.Environment);
 
 app.MapEndpoints();
 
