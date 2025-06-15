@@ -9,7 +9,9 @@ public static class Endpoints
     public static IEndpointRouteBuilder MapConfigEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/api/config", (IOptions<GoogleSsoSettings> google) =>
-            Results.Ok(new ConfigResponse(google.Value.ClientId)));
+            TypedResults.Ok(new ConfigResponse(google.Value.ClientId)))
+            .WithName("GetConfig")
+            .WithTags("Config");
         return endpoints;
     }
 }
