@@ -1,3 +1,4 @@
+using OnParDev.Mcp.Api.Config;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,6 +9,7 @@ builder.Services.AddSpaStaticFiles(configuration =>
 {
     configuration.RootPath = "ClientApp/dist";
 });
+builder.Services.AddConfigServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -29,6 +31,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+app.MapConfigEndpoints();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
@@ -36,3 +39,4 @@ app.MapControllerRoute(
 app.MapFallbackToFile("index.html");
 
 app.Run();
+public partial class Program {}
