@@ -37,6 +37,7 @@ This file defines the expectations and behavioral constraints for Codex when gen
 - Always install dependencies via command line, i.e. `npm install <dependency>`
 - Always install dependencies before committing the code. We don't want the package-lock.json to get out of date.
 - Prefer **Vertical Slicing**, grouping feature-specific files within a feature folder when possible.
+- Always run the linter before pushing or creating a PR to prevent pipeline failures.
 
 ## Formatting and Structure
 
