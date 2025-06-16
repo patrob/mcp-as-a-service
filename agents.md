@@ -56,76 +56,8 @@ This file defines the expectations and behavioral constraints for Codex when gen
 
 - All commits should be atomic and meaningful.
 - Every PR must include corresponding tests.
+- If a UI change was made, please include a screenshot.
 - If asked to generate a PR, include a **summary of changes** and why the change was made.
-
-## C# Specific Guidelines
-
-- Prefer composition over inheritance when possible.
-- For services, use interfaces for enabling mocking in tests.
-- Separate Unit & Integration Tests into separate folders within the Tests project.
-- Don't reuse state or contexts between tests, all tests should be isolated and run individually or collectively and give the same result.
-- Prefer interfaces defined at the top of implementation files
-  Ex:
-
-  ```c#
-  public interface IDoSomething
-  {
-    void DoSomething()
-  }
-
-  public class DoSomething : IDoSomething
-  {
-    public void DoSomething()
-    {
-      // do something
-    }
-  }
-  ```
-
-## ASP.NET API Structure
-
-- Prefer dependency injection.
-- Group services together in an extension method.
-- Prefer minimal API, with endpoints defined in extension method.
-- Basic Folder Structure:
-
-```
-OnParDev.Mcp.Api/
-+-Config
-  +-Endpoints.cs # contains endpoints using Minimal API via extension methods
-  +-Services.cs # contains addition of services via IServiceCollection extension methods
-+-ClientApp/ # holds the React App frontend.
-```
-
-## Architecture Examples
-
-### C# Minimal API Example
-
-```csharp
-public static class UserEndpoints
-{
-    public static void MapUserEndpoints(this IEndpointRouteBuilder app)
-    {
-        app.MapGet("/users", GetUsers);
-    }
-
-    private static async Task<IResult> GetUsers(IUserService service)
-    {
-        var users = await service.ListAsync();
-        return Results.Ok(users);
-    }
-}
-```
-
-```csharp
-public static class Services
-{
-    public static void AddApiServices(this IServiceCollection services)
-    {
-        services.AddScoped<IUserService, UserService>();
-    }
-}
-```
 
 ### TypeScript React Fetch Example
 
@@ -149,7 +81,7 @@ export function UserList() {
 
   return (
     <ul>
-      {users.map(u => (
+      {users.map((u) => (
         <li key={u.id}>{u.name}</li>
       ))}
     </ul>
@@ -158,6 +90,7 @@ export function UserList() {
 ```
 
 ## Coding Standards - Level 100
+
 - No duplication (including tests)
 - Ticket # in commit message
 - No commented out code
@@ -172,12 +105,14 @@ export function UserList() {
 - Only 1 level of inheritance
 
 ## Unit Test Standards - Level 100
+
 - No assertNotNull()
 - No @Ignore tests
 - 3 or fewer assertions per test method
 - No mocked static methods
 
 ## Coding Standards - Level 200
+
 - Only inherit from abstract or interfaces
 - No name decorations (FooImpl.java)
 - No getter/setters on Interfaces
@@ -190,6 +125,7 @@ export function UserList() {
 - Factory methods over constructors
 
 ## Unit Test Standards - Level 200
+
 - Arrange, Act, Assert
 - No uncovered lines
 - Prefer state based testing: Prefer stubs over mocks

@@ -48,15 +48,3 @@ for (let i = 0, n = str.length; i < 10; i++) {
 function f(x: number, y: string): void {}
 ```
 
-## Asp.Net Guidelnes
-
-- Basic Folder Structure:
-
-```
-OnParDev.Mcp.Api/
-+-Config
-  +-Endpoints.cs # contains endpoints using Minimal API via extension methods
-  +-Services.cs # contains addition of services via IServiceCollection extension methods
-+-ClientApp/ # holds the React App frontend.
-```
-
