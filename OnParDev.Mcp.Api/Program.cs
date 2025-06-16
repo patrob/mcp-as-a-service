@@ -3,6 +3,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // Add SPA services
 builder.Services.AddSpaStaticFiles(configuration =>
@@ -26,6 +28,9 @@ else
         spa.UseProxyToSpaDevelopmentServer("https://localhost:5173");
     });
 }
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

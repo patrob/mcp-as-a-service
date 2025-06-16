@@ -8,6 +8,7 @@
     "start": "npm run prestart && vite",
     "build": "vite build",
     "lint": "eslint .",
+    "generate:api": "openapi-generator-cli generate -i ../bin/Release/net8.0/swagger.json -g typescript-fetch -o src/api --skip-validate-spec --additional-properties=supportsES6=true,typescriptThreePlus=true",
     "preview": "vite preview --https",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -18,6 +19,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@openapitools/openapi-generator-cli": "^2.20.2",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@types/react": "^19.1.2",
