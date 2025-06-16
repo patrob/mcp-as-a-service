@@ -7,10 +7,11 @@ import SignUp from './pages/SignUp'
 import Pricing from './pages/Pricing'
 import Contact from './pages/Contact'
 import { useAuth } from './auth/AuthContext'
+import Header from './layouts/Header'
 
 function App() {
   useConfig()
-  const { isAuthenticated, logout } = useAuth()
+  useAuth()
   const [path, setPath] = useState(window.location.pathname)
 
   useEffect(() => {
@@ -44,18 +45,7 @@ function App() {
 
   return (
     <>
-      <nav>
-        <button onClick={() => navigate('/')}>Home</button>
-        {!isAuthenticated && (
-          <>
-            <button onClick={() => navigate('/signup')}>Sign Up</button>
-            <button onClick={() => navigate('/signin')}>Sign In</button>
-          </>
-        )}
-        <button onClick={() => navigate('/pricing')}>Pricing</button>
-        <button onClick={() => navigate('/contact')}>Contact</button>
-        {isAuthenticated && <button onClick={logout}>Logout</button>}
-      </nav>
+      <Header navigate={navigate} />
       {content}
     </>
   )
