@@ -1,8 +1,8 @@
 using OnParDev.Mcp.Api.Config;
+using OnParDev.Mcp.Api.WeatherForecast;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -36,10 +36,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+
 app.MapConfigEndpoints();
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+app.MapWeatherForecastEndpoints();
 
 app.MapFallbackToFile("index.html");
 
