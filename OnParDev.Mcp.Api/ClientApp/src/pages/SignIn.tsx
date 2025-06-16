@@ -5,7 +5,13 @@ function SignIn() {
   return (
     <>
       <h1>Sign In</h1>
-      <button onClick={login}>Log In</button>
+      <button
+        onClick={() =>
+          login({ name: 'User', picture: 'https://via.placeholder.com/40' })
+        }
+      >
+        Log In
+      </button>
     </>
   )
 }
