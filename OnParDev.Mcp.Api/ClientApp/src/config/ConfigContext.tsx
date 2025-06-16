@@ -1,8 +1,10 @@
 import { createContext, FC, ReactNode, useContext, useEffect, useState } from 'react'
+import { ConfigApi } from '../api/apis/ConfigApi'
+import { ConfigResponse } from '../api/models/ConfigResponse'
 
-export interface Config {
-  googleClientId: string
-}
+const api = new ConfigApi()
+
+export type Config = ConfigResponse
 
 const ConfigContext = createContext<Config | undefined>(undefined)
 
@@ -11,9 +13,7 @@ export const ConfigProvider: FC<{ children: ReactNode; initialConfig?: Config }>
 
   useEffect(() => {
     if (!initialConfig) {
-      fetch('/api/config')
-        .then((r) => r.json())
-        .then(setConfig)
+      api.getConfig().then(setConfig)
     }
   }, [initialConfig])
 
