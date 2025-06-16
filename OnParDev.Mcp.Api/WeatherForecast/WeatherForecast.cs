@@ -1,4 +1,4 @@
-namespace OnParDev.Mcp.Web;
+namespace OnParDev.Mcp.Api.WeatherForecast;
 
 public record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
