@@ -1,8 +1,0 @@
-apis/ConfigApi.ts
-apis/WeatherForecastApi.ts
-apis/index.ts
-index.ts
-models/ConfigResponse.ts
-models/WeatherForecast.ts
-models/index.ts
-runtime.ts
