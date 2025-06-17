@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
   flyway:
-    image: flyway/flyway:9
+    image: flyway/flyway:11.9.1
     command: -connectRetries=10 migrate
     volumes:
       - ./flyway/sql:/flyway/sql
