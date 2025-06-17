@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Github, Mail, Server, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
+import { signIn } from 'next-auth/react'
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -29,11 +30,17 @@ export default function LoginPage() {
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
           {/* Social Login */}
           <div className="space-y-3 mb-6">
-            <button className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors">
+            <button
+              onClick={() => signIn('github')}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors"
+            >
               <Github className="h-5 w-5 text-slate-700" />
               <span className="font-medium text-slate-700">Continue with GitHub</span>
             </button>
-            <button className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors">
+            <button
+              onClick={() => signIn('google')}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors"
+            >
               <Mail className="h-5 w-5 text-slate-700" />
               <span className="font-medium text-slate-700">Continue with Google</span>
             </button>
