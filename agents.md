@@ -59,6 +59,9 @@ This file defines the expectations and behavioral constraints for Codex when gen
 - If a UI change was made, please include a screenshot.
 - If asked to generate a PR, include a **summary of changes** and why the change was made.
 - All tests, unit and e2e, must pass before submitting a PR.
+- When implementing a new feature, create or update an e2e test to cover the acceptance criteria.
+- Unit tests should prefer state coverage over line coverage.
+- Maintain or increase test coverage above 80%. Once overall coverage reaches 90%, that becomes the required minimum.
 
 ### TypeScript React Fetch Example
 
