@@ -192,7 +192,7 @@ export default function PricingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-slate-900 mb-4">Compare all features</h2>
-            <p className="text-xl text-slate-600">See what's included in each plan</p>
+            <p className="text-xl text-slate-600">See what&apos;s included in each plan</p>
           </div>
           
           <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
@@ -261,7 +261,7 @@ export default function PricingPage() {
           <div className="space-y-8">
             <div className="bg-white rounded-xl p-6 border border-slate-200">
               <h3 className="text-lg font-semibold text-slate-900 mb-2">Can I upgrade or downgrade my plan?</h3>
-              <p className="text-slate-600">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately and you'll be charged or refunded accordingly.</p>
+              <p className="text-slate-600">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately and you&apos;ll be charged or refunded accordingly.</p>
             </div>
             
             <div className="bg-white rounded-xl p-6 border border-slate-200">
