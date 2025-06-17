@@ -42,7 +42,9 @@ jobs:
           cache-dependency-path: app/package-lock.json
       - name: Install dependencies
         run: npm ci
+      - name: Build
+        run: npm run build
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
       - name: Run e2e tests
-        run: npm run test:e2e
+        run: npx concurrently -k -s first "npm run start" "npx wait-on http://localhost:3000 && npm run test:e2e"
