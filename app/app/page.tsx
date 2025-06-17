@@ -10,7 +10,7 @@ export default function HomePage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
               <Server className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-slate-900">MCPaaS</span>
+              <span className="text-xl font-bold text-slate-900">MyMCP</span>
             </div>
             <div className="hidden md:flex items-center space-x-8">
               <Link href="/pricing" className="text-slate-600 hover:text-slate-900 transition-colors">
@@ -208,7 +208,7 @@ export default function HomePage() {
             Ready to accelerate your LLM development?
           </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of developers using MCPaaS to build the next generation of AI applications.
+            Join thousands of developers using MyMCP to build the next generation of AI applications.
           </p>
           <Link href="/dashboard" className="bg-white text-blue-600 px-8 py-4 rounded-xl font-medium hover:bg-blue-50 transition-colors inline-flex items-center gap-2">
             Start Building Today
@@ -224,7 +224,7 @@ export default function HomePage() {
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <Server className="h-6 w-6 text-blue-400" />
-                <span className="text-lg font-bold text-white">MCPaaS</span>
+                <span className="text-lg font-bold text-white">MyMCP</span>
               </div>
               <p className="text-sm text-slate-400">
                 Model Context Protocol servers made simple.
@@ -256,7 +256,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="border-t border-slate-700 mt-8 pt-8 text-center text-sm text-slate-400">
-            © 2024 MCPaaS. All rights reserved.
+            © 2024 MyMCP. All rights reserved.
           </div>
         </div>
       </footer>

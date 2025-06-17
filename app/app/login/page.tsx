@@ -16,7 +16,7 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <Link href="/" className="flex items-center justify-center space-x-2 mb-6">
             <Server className="h-10 w-10 text-blue-600" />
-            <span className="text-2xl font-bold text-slate-900">MCPaaS</span>
+            <span className="text-2xl font-bold text-slate-900">MyMCP</span>
           </Link>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">
             {isLogin ? 'Welcome back' : 'Create your account'}

@@ -12,7 +12,7 @@ export default function PricingPage() {
               <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">M</span>
               </div>
-              <span className="text-xl font-bold text-slate-900">MCPaaS</span>
+              <span className="text-xl font-bold text-slate-900">MyMCP</span>
             </Link>
             <div className="flex items-center space-x-8">
               <Link href="/" className="text-slate-600 hover:text-slate-900 transition-colors">
@@ -62,7 +62,7 @@ export default function PricingPage() {
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold text-slate-900 mb-2">Free</h3>
                 <div className="text-5xl font-bold text-slate-900 mb-2">$0</div>
-                <p className="text-slate-600">Perfect for trying out MCPaaS</p>
+                <p className="text-slate-600">Perfect for trying out MyMCP</p>
               </div>
               
               <ul className="space-y-4 mb-8">
@@ -286,7 +286,7 @@ export default function PricingPage() {
       <section className="px-4 sm:px-6 lg:px-8 pb-20">
         <div className="max-w-4xl mx-auto bg-blue-600 rounded-2xl p-12 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Ready to get started?</h2>
-          <p className="text-xl text-blue-100 mb-8">Join thousands of developers building with MCPaaS</p>
+          <p className="text-xl text-blue-100 mb-8">Join thousands of developers building with MyMCP</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/dashboard" className="bg-white text-blue-600 px-8 py-3 rounded-xl font-medium hover:bg-blue-50 transition-colors">
               Start Free Trial
