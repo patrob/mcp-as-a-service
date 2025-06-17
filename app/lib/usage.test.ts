@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatUsage } from '../lib/usage';
+import { formatUsage } from './usage';
 
 describe('formatUsage', () => {
   it('calculates percentage', () => {

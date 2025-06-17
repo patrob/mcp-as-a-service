@@ -1,5 +1,5 @@
 import { vi, describe, it, expect } from 'vitest'
-import { getSubscription } from '../lib/subscription'
+import { getSubscription } from './subscription'
 
 describe('getSubscription', () => {
   it('returns plan and usage', async () => {
