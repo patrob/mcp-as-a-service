@@ -56,9 +56,11 @@ This file defines the expectations and behavioral constraints for Codex when gen
 
 - All commits should be atomic and meaningful.
 - Every PR must include corresponding tests.
+- When adding a new feature, ensure an e2e test covers the acceptance criteria.
 - If a UI change was made, please include a screenshot.
 - If asked to generate a PR, include a **summary of changes** and why the change was made.
 - All tests, unit and e2e, must pass before submitting a PR.
+- Maintain at least 80% total test coverage until 90% is reached, then 90% becomes the minimum.
 
 ### TypeScript React Fetch Example
 
@@ -130,4 +132,5 @@ export function UserList() {
 - Arrange, Act, Assert
 - No uncovered lines
 - Prefer state based testing: Prefer stubs over mocks
+- Aim for state coverage over line coverage
 

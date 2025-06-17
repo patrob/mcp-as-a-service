@@ -9,4 +9,8 @@ describe('formatUsage', () => {
   it('caps at 100%', () => {
     expect(formatUsage(120, 100)).toBe('100%');
   });
+
+  it('returns 0% when limit is zero or negative', () => {
+    expect(formatUsage(10, 0)).toBe('0%');
+  });
 });
