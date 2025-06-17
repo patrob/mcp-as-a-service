@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Server, Github, Play, Square, Settings, Plus, Activity, Users, Database, Zap } from 'lucide-react'
 import Link from 'next/link'
+import { SubscriptionInfo } from '@/components/SubscriptionInfo'
 
 export default function DashboardPage() {
-  const [subscription, setSubscription] = useState<{ plan: string; usage: number } | null>(null)
   const [servers, setServers] = useState([
     {
       id: 1,
@@ -35,19 +35,6 @@ export default function DashboardPage() {
     ))
   }
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch('/api/subscription')
-        if (res.ok) {
-          setSubscription(await res.json())
-        }
-      } catch (err) {
-        console.error(err)
-      }
-    }
-    load()
-  }, [])
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -128,14 +115,7 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-
-        {subscription && (
-          <div className="bg-white rounded-xl p-6 border border-slate-200 mb-8">
-            <h3 className="text-xl font-semibold text-slate-900 mb-2">Subscription</h3>
-            <p className="text-slate-600">Plan: {subscription.plan}</p>
-            <p className="text-slate-600">MCP Usage: {subscription.usage}</p>
-          </div>
-        )}
+        <SubscriptionInfo />
 
         {/* Servers Section */}
         <div className="bg-white rounded-xl border border-slate-200 mb-8">
