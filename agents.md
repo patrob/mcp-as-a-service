@@ -58,6 +58,7 @@ This file defines the expectations and behavioral constraints for Codex when gen
 - Every PR must include corresponding tests.
 - If a UI change was made, please include a screenshot.
 - If asked to generate a PR, include a **summary of changes** and why the change was made.
+- All tests, unit and e2e, must pass before submitting a PR.
 
 ### TypeScript React Fetch Example
 
