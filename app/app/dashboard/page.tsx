@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Server, Github, Play, Square, Settings, Plus, Activity, Users, Database, Zap } from 'lucide-react'
 import Link from 'next/link'
 import { SubscriptionInfo } from '@/components/SubscriptionInfo'
@@ -27,11 +27,30 @@ export default function DashboardPage() {
     }
   ])
 
-  const toggleServer = (id: number) => {
-    setServers(servers.map(server =>
-      server.id === id
-        ? { ...server, status: server.status === 'running' ? 'stopped' : 'running' }
-        : server
+  useEffect(() => {
+    async function check() {
+      const res = await fetch('/api/container/status')
+      if (res.ok) {
+        const data = await res.json()
+        setServers(s =>
+          s.map(server =>
+            server.id === 2 ? { ...server, status: data.running ? 'running' : 'stopped' } : server
+          )
+        )
+      }
+    }
+    check()
+  }, [])
+
+  const toggleServer = async (id: number) => {
+    const server = servers.find(s => s.id === id)
+    if (!server) return
+    const action = server.status === 'running' ? 'stop' : 'start'
+    await fetch(`/api/container/${action}`, { method: 'POST' })
+    setServers(servers.map(s =>
+      s.id === id
+        ? { ...s, status: action === 'start' ? 'running' : 'stopped' }
+        : s
     ))
   }
 
