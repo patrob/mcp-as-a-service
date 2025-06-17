@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: devdb
+    ports:
+      - "5432:5432"
+  flyway:
+    image: flyway/flyway:9
+    command: -connectRetries=10 migrate
+    volumes:
+      - ./flyway/sql:/flyway/sql
+    environment:
+      FLYWAY_URL: jdbc:postgresql://db:5432/devdb
+      FLYWAY_USER: dev
+      FLYWAY_PASSWORD: dev
+    depends_on:
+      - db
