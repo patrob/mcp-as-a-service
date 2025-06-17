@@ -41,7 +41,7 @@ export default function AboutPage() {
             <span className="text-blue-600 block">MCP integration</span>
           </h1>
           <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-            We're making Model Context Protocol servers accessible to every developer, 
+            We&apos;re making Model Context Protocol servers accessible to every developer, 
             from startups to enterprise teams building the next generation of AI applications.
           </p>
         </div>
@@ -108,7 +108,7 @@ export default function AboutPage() {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-slate-900 mb-4">Meet our team</h2>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              We're a team of developers, designers, and AI enthusiasts passionate about making MCP accessible to everyone.
+              We&apos;re a team of developers, designers, and AI enthusiasts passionate about making MCP accessible to everyone.
             </p>
           </div>
           
@@ -236,8 +236,8 @@ export default function AboutPage() {
             Ready to join our mission?
           </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Whether you're building your first AI application or scaling to millions of users, 
-            we're here to help you succeed.
+            Whether you&apos;re building your first AI application or scaling to millions of users, 
+            we&apos;re here to help you succeed.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/dashboard" className="bg-white text-blue-600 px-8 py-4 rounded-xl font-medium hover:bg-blue-50 transition-colors">
