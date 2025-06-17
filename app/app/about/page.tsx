@@ -10,7 +10,7 @@ export default function AboutPage() {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-2">
               <Server className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-slate-900">MCPaaS</span>
+              <span className="text-xl font-bold text-slate-900">MyMCP</span>
             </Link>
             <div className="flex items-center space-x-8">
               <Link href="/" className="text-slate-600 hover:text-slate-900 transition-colors">
@@ -59,7 +59,7 @@ export default function AboutPage() {
                 has been complex and time-consuming.
               </p>
               <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                MCPaaS was born from our experience building AI applications and struggling 
+                MyMCP was born from our experience building AI applications and struggling 
                 with MCP server management. We believe every developer should have access 
                 to powerful, reliable MCP infrastructure without the operational overhead.
               </p>
@@ -257,7 +257,7 @@ export default function AboutPage() {
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <Server className="h-6 w-6 text-blue-400" />
-                <span className="text-lg font-bold text-white">MCPaaS</span>
+                <span className="text-lg font-bold text-white">MyMCP</span>
               </div>
               <p className="text-sm text-slate-400">
                 Model Context Protocol servers made simple.
@@ -289,7 +289,7 @@ export default function AboutPage() {
             </div>
           </div>
           <div className="border-t border-slate-700 mt-8 pt-8 text-center text-sm text-slate-400">
-            © 2024 MCPaaS. All rights reserved.
+            © 2024 MyMCP. All rights reserved.
           </div>
         </div>
       </footer>

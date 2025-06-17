@@ -10,7 +10,7 @@ export default function ServersPage() {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-2">
               <Server className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-slate-900">MCPaaS</span>
+              <span className="text-xl font-bold text-slate-900">MyMCP</span>
             </Link>
             <div className="flex items-center space-x-8">
               <Link href="/" className="text-slate-600 hover:text-slate-900 transition-colors">
