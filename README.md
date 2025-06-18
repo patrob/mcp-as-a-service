@@ -18,3 +18,14 @@ Copy `.env.example` to `.env` and provide values for the following:
 1. Install Node dependencies in `app` with `npm install`.
 2. Run `docker compose up` to start Postgres, apply migrations and launch the `web` service.
 
+## Building and running
+
+Build the web container and start all services:
+
+```bash
+docker compose build
+docker compose up
+```
+
+Visit <http://localhost:3000> once the containers are running.
+
