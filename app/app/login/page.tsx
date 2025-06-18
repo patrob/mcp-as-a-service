@@ -4,10 +4,13 @@ import { useState } from 'react'
 import { Github, Mail, Server, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLogin, setIsLogin] = useState(true)
+  const router = useRouter()
+  const testMode = process.env.NEXT_PUBLIC_TEST_SESSION === 'true'
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
@@ -31,14 +34,21 @@ export default function LoginPage() {
           {/* Social Login */}
           <div className="space-y-3 mb-6">
             <button
-              onClick={() => signIn('github')}
+              onClick={async () => {
+                if (testMode) {
+                  await signIn('test', { redirect: false })
+                  router.push('/')
+                } else {
+                  await signIn('github')
+                }
+              }}
               className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors"
             >
               <Github className="h-5 w-5 text-slate-700" />
               <span className="font-medium text-slate-700">Continue with GitHub</span>
             </button>
             <button
-              onClick={() => signIn('google')}
+              onClick={() => signIn(testMode ? 'test' : 'google')}
               className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors"
             >
               <Mail className="h-5 w-5 text-slate-700" />
