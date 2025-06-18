@@ -38,6 +38,15 @@ This file defines the expectations and behavioral constraints for Codex when gen
 - Always install dependencies before committing the code. We don't want the package-lock.json to get out of date.
 - Prefer **Vertical Slicing**, grouping feature-specific files within a feature folder when possible.
 - Always run the linter before pushing or creating a PR to prevent pipeline failures.
+- Run tests and linters for every code change, except when only documentation or
+  comments are modified.
+- When adding a new feature, create or update an end-to-end test that verifies
+  the acceptance criteria.
+- Unit tests should prefer state based testing over line coverage and must
+  maintain at least **80%** project coverage until **90%** is achieved, after
+  which **90%** becomes the new threshold.
+- The verify pipeline collects test coverage and fails if the threshold is not
+  met.
 
 ## Formatting and Structure
 
