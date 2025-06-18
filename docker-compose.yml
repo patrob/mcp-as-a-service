@@ -19,3 +19,11 @@ services:
       FLYWAY_PASSWORD: dev
     depends_on:
       - db
+
+  web:
+    build: ./app
+    env_file: .env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
