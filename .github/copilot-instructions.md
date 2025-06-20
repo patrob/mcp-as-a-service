@@ -15,7 +15,7 @@
 
 ## Comments
 
-- When there are comments for `functions`, `interfaces`, `enums`, and `classes` use JSDoc style comments
+- Do not use comments to explain what the code does. The code should be self-explanatory.
 
 ## Strings
 

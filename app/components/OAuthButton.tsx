@@ -7,7 +7,6 @@ type OAuthProvider = "github" | "google";
 
 interface OAuthButtonProps {
   provider: OAuthProvider;
-  testMode?: boolean;
   className?: string;
 }
 
@@ -24,20 +23,12 @@ const providerConfig = {
   },
 };
 
-export function OAuthButton({
-  provider,
-  testMode = false,
-  className = "",
-}: OAuthButtonProps) {
+export function OAuthButton({ provider, className = "" }: OAuthButtonProps) {
   const config = providerConfig[provider];
   const Icon = config.icon;
 
   const handleClick = async () => {
-    if (testMode) {
-      await signIn("test", { callbackUrl: "/" });
-    } else {
-      await signIn(config.providerId);
-    }
+    await signIn(config.providerId);
   };
 
   const buttonText = `Continue with ${config.label}`;

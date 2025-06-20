@@ -10,7 +10,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const router = useRouter();
-  const testMode = process.env.NEXT_PUBLIC_TEST_SESSION === "true";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
@@ -38,8 +37,8 @@ export default function LoginPage() {
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
           {/* Social Login */}
           <div className="space-y-3 mb-6">
-            <OAuthButton provider="github" testMode={testMode} />
-            <OAuthButton provider="google" testMode={testMode} />
+            <OAuthButton provider="github" />
+            <OAuthButton provider="google" />
           </div>
 
           {/* Divider */}
