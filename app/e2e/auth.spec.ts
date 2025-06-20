@@ -48,15 +48,15 @@ const mockLoggedOutSession = async (page: Page) => {
 };
 
 test("can sign in and sign out with GitHub", async ({ page }) => {
-  await mockLoggedInSession(page);
   await page.goto("/");
+
+  await mockLoggedInSession(page);
+  await page.reload();
   await expect(page.getByTestId("user-menu-trigger")).toBeVisible();
 
   await mockLoggedOutSession(page);
   await page.getByTestId("user-menu-trigger").click();
   await page.getByRole("menuitem", { name: "Sign Out" }).click();
-
-  await page.reload();
 
   await page.reload();
   await expect(page.getByText("Sign In")).toBeVisible();
@@ -67,8 +67,10 @@ test("can sign in and sign out with GitHub", async ({ page }) => {
 });
 
 test("can sign in and sign out with Google", async ({ page }) => {
-  await mockLoggedInSession(page);
   await page.goto("/");
+
+  await mockLoggedInSession(page);
+  await page.reload();
   await expect(page.getByTestId("user-menu-trigger")).toBeVisible();
 
   await mockLoggedOutSession(page);
@@ -78,10 +80,8 @@ test("can sign in and sign out with Google", async ({ page }) => {
   await page.reload();
   await expect(page.getByText("Sign In")).toBeVisible();
 
-  await mockLoggedOutSession(page);
-  await page.getByTestId("user-menu-trigger").click();
-  await page.getByRole("menuitem", { name: "Sign Out" }).click();
-
-  await page.reload();
-  await expect(page.getByText("Sign In")).toBeVisible();
+  await page.unroute("**/api/auth/session");
+  await page.unroute("**/api/auth/signout**");
+  await page.unroute("**/api/auth/csrf");
 });
+
