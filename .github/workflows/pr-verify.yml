@@ -3,8 +3,8 @@ name: PR Verify
 on:
   pull_request:
     paths-ignore:
-      - '**/*.md'
-      - 'flyway/**'
+      - "**/*.md"
+      - "flyway/**"
 
 jobs:
   verify:
@@ -16,8 +16,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
+          node-version-file: ".nvmrc"
+          cache: "npm"
           cache-dependency-path: app/package-lock.json
       - name: Install dependencies
         run: npm ci
@@ -42,14 +42,21 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
+          node-version-file: ".nvmrc"
+          cache: "npm"
           cache-dependency-path: app/package-lock.json
       - name: Install dependencies
         run: npm ci
       - name: Build
+        env:
+          NEXT_PUBLIC_TEST_SESSION: true
+          NEXTAUTH_SECRET: test-secret-for-ci
         run: npm run build
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
       - name: Run e2e tests
+        env:
+          NEXT_PUBLIC_TEST_SESSION: true
+          NEXTAUTH_SECRET: test-secret-for-ci
         run: npx concurrently -k -s first "npm run start" "npx wait-on http://localhost:3000 && npm run test:e2e"
+

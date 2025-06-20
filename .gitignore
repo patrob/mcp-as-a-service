@@ -13,6 +13,7 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Local env files
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -27,6 +28,9 @@ pnpm-debug.log*
 
 # Coverage directory
 coverage/
+
+# Test results
+test-results/
 
 # Next.js cache
 .next/cache/
