@@ -19,7 +19,19 @@ jobs:
           node-version-file: ".nvmrc"
           cache: "npm"
           cache-dependency-path: app/package-lock.json
+
+      # Additional caching for node_modules to speed up npm ci
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: cache-node-modules
+        with:
+          path: app/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('app/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
       - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
       - name: Lint
         run: npm run lint
@@ -46,22 +58,36 @@ jobs:
           cache: "npm"
           cache-dependency-path: app/package-lock.json
 
-      # Cache Playwright browsers
-      - name: Get Playwright version
-        id: playwright-version
-        run: echo "version=$(npm list @playwright/test --depth=0 --json | jq -r '.dependencies["@playwright/test"].version')" >> $GITHUB_OUTPUT
-
-      - name: Cache Playwright browsers
+      # Cache node_modules for faster npm ci
+      - name: Cache node_modules
         uses: actions/cache@v4
-        id: playwright-cache
+        id: cache-node-modules
         with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
+          path: app/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('app/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-playwright-
+            ${{ runner.os }}-node-modules-
 
       - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
+
+      - name: Get installed Playwright version
+        id: playwright-version
+        run: |
+          PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')
+          echo "version=$PLAYWRIGHT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Cache Playwright browsers
+        id: cache-playwright-browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright browsers
+        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
 
       - name: Build
         env:
@@ -69,17 +95,9 @@ jobs:
           NEXTAUTH_SECRET: test-secret-for-ci
         run: npm run build
 
-      - name: Install Playwright browsers
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps
-
-      - name: Install Playwright system dependencies
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps
-
       - name: Run e2e tests
         env:
           NEXT_PUBLIC_TEST_SESSION: true
           NEXTAUTH_SECRET: test-secret-for-ci
-        run: npx concurrently -k -s first "npm run start" "npx wait-on http://localhost:3000 && npm run test:e2e"
+        run: npm run test:e2e
 
