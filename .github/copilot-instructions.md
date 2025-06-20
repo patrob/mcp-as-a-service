@@ -1,5 +1,12 @@
 # Coding Guidelines
 
+## Responses
+
+- Do not assume, ask clarifying questions.
+- Don't always agree with me, challenge my assumptions.
+- Assume you're in the root folder of the project.
+- When performing npm commands, prepend `nvm use` to ensure the correct Node.js version is used.
+
 ## Naming Conventions
 
 - Use PascalCase for `type` names
