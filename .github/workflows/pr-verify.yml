@@ -20,7 +20,6 @@ jobs:
           cache: "npm"
           cache-dependency-path: app/package-lock.json
 
-      # Additional caching for node_modules to speed up npm ci
       - name: Cache node_modules
         uses: actions/cache@v4
         id: cache-node-modules
@@ -58,7 +57,6 @@ jobs:
           cache: "npm"
           cache-dependency-path: app/package-lock.json
 
-      # Cache node_modules for faster npm ci
       - name: Cache node_modules
         uses: actions/cache@v4
         id: cache-node-modules
@@ -72,26 +70,23 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
 
-      - name: Get installed Playwright version
-        id: playwright-version
-        run: |
-          PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')
-          echo "version=$PLAYWRIGHT_VERSION" >> $GITHUB_OUTPUT
-
       - name: Cache Playwright browsers
         id: cache-playwright-browsers
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-browsers-${{ steps.playwright-version.outputs.version }}
+          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('app/package-lock.json') }}
+          restore-keys: |
+            playwright-browsers-${{ runner.os }}-
 
       - name: Install Playwright browsers
         if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps
+        run: npx playwright install chromium
 
       - name: Run e2e tests
         env:
           NEXT_PUBLIC_TEST_SESSION: true
           NEXTAUTH_SECRET: test-secret-for-ci
+          CI: true
         run: npm run test:e2e
 
