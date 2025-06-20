@@ -32,7 +32,6 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
       - name: Lint
         run: npm run lint
@@ -80,7 +79,6 @@ jobs:
           echo "version=$PLAYWRIGHT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Cache Playwright browsers
-        id: cache-playwright-browsers
         id: cache-playwright-browsers
         uses: actions/cache@v4
         with:
