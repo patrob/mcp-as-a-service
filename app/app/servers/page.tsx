@@ -1,8 +1,16 @@
 import { Server } from 'lucide-react'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { getServerSession } from 'next-auth/next'
 import { BuiltInServerTable } from '@/components/BuiltInServerTable'
+import { UserMenu } from '@/components/UserMenu'
+import { authOptions } from '@/lib/auth'
 
-export default function ServersPage() {
+export default async function ServersPage() {
+  const session = await getServerSession(authOptions)
+  if (!session) {
+    redirect('/login')
+  }
   return (
     <div className="min-h-screen bg-slate-50">
       <nav className="bg-white/80 backdrop-blur-md border-b border-slate-200">
@@ -19,6 +27,7 @@ export default function ServersPage() {
               <Link href="/dashboard" className="text-slate-600 hover:text-slate-900 transition-colors">
                 Dashboard
               </Link>
+              <UserMenu />
             </div>
           </div>
         </div>

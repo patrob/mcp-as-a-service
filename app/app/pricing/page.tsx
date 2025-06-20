@@ -1,5 +1,6 @@
 import { Check, X, Zap, Shield, Headphones } from 'lucide-react'
 import Link from 'next/link'
+import { UserMenu } from '@/components/UserMenu'
 
 export default function PricingPage() {
   return (
@@ -21,9 +22,7 @@ export default function PricingPage() {
               <Link href="/docs" className="text-slate-600 hover:text-slate-900 transition-colors">
                 Docs
               </Link>
-              <Link href="/login" className="text-slate-600 hover:text-slate-900 transition-colors">
-                Sign In
-              </Link>
+              <UserMenu />
               <Link href="/dashboard" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                 Dashboard
               </Link>

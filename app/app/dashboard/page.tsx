@@ -1,11 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Server, Github, Play, Square, Settings, Plus, Activity, Users, Database, Zap } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { SubscriptionInfo } from '@/components/SubscriptionInfo'
+import { UserMenu } from '@/components/UserMenu'
 
 export default function DashboardPage() {
+  const { data: session, status } = useSession()
+  const router = useRouter()
   const [servers, setServers] = useState([
     {
       id: 1,
@@ -28,13 +33,24 @@ export default function DashboardPage() {
   ])
 
   const toggleServer = (id: number) => {
-    setServers(servers.map(server =>
-      server.id === id
-        ? { ...server, status: server.status === 'running' ? 'stopped' : 'running' }
-        : server
-    ))
+    setServers(
+      servers.map((server) =>
+        server.id === id
+          ? { ...server, status: server.status === 'running' ? 'stopped' : 'running' }
+          : server
+      )
+    )
   }
 
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/login')
+    }
+  }, [status, router])
+
+  if (status !== 'authenticated') {
+    return null
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -50,9 +66,7 @@ export default function DashboardPage() {
               <button className="text-slate-600 hover:text-slate-900 transition-colors">
                 <Settings className="h-5 w-5" />
               </button>
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">U</span>
-              </div>
+              <UserMenu />
             </div>
           </div>
         </div>
