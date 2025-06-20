@@ -35,16 +35,12 @@ const config: PlaywrightTestConfig = {
     },
   ],
   webServer: {
-    command: "npm run dev",
+    command:
+      "NEXTAUTH_SECRET='test-secret-for-playwright' NEXTAUTH_URL='http://localhost:3000' npm run dev",
     port: 3000,
     env: {
-      NODE_ENV: "test",
       NEXTAUTH_SECRET: "test-secret-for-playwright",
       NEXTAUTH_URL: "http://localhost:3000",
-      GITHUB_CLIENT_ID: "test-github-id",
-      GITHUB_CLIENT_SECRET: "test-github-secret",
-      GOOGLE_CLIENT_ID: "test-google-id",
-      GOOGLE_CLIENT_SECRET: "test-google-secret",
     },
     reuseExistingServer: true,
     timeout: 120 * 1000,
