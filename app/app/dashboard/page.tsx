@@ -7,44 +7,49 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { SubscriptionInfo } from '@/components/SubscriptionInfo'
 import { UserMenu } from '@/components/UserMenu'
+import { fetchUserServers, startServer, stopServer, type ServerInstance } from '@/lib/servers'
 
 export default function DashboardPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
-  const [servers, setServers] = useState([
-    {
-      id: 1,
-      name: 'GitHub MCP Server',
-      type: 'github',
-      status: 'running',
-      lastActive: '2 minutes ago',
-      requests: 1247,
-      uptime: '99.9%'
-    },
-    {
-      id: 2,
-      name: 'Custom API Server',
-      type: 'custom',
-      status: 'stopped',
-      lastActive: '1 hour ago',
-      requests: 834,
-      uptime: '98.7%'
-    }
-  ])
+  const [servers, setServers] = useState<ServerInstance[]>([])
+  const [loading, setLoading] = useState(true)
+  const [actionLoading, setActionLoading] = useState<number | null>(null)
 
-  const toggleServer = (id: number) => {
-    setServers(
-      servers.map((server) =>
-        server.id === id
-          ? { ...server, status: server.status === 'running' ? 'stopped' : 'running' }
-          : server
-      )
-    )
+  const loadServers = async () => {
+    try {
+      const data = await fetchUserServers()
+      setServers(data)
+    } catch (error) {
+      console.error('Error loading servers:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const toggleServer = async (server: ServerInstance) => {
+    setActionLoading(server.id)
+    try {
+      if (server.status === 'running') {
+        await stopServer(server.id)
+      } else {
+        await startServer(server.id)
+      }
+      // Reload servers to get updated status
+      await loadServers()
+    } catch (error) {
+      console.error('Error toggling server:', error)
+      alert('Failed to toggle server')
+    } finally {
+      setActionLoading(null)
+    }
   }
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.replace('/login')
+    } else if (status === 'authenticated') {
+      loadServers()
     }
   }, [status, router])
 
@@ -85,7 +90,9 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Active Servers</p>
-                <p className="text-2xl font-bold text-slate-900">2</p>
+                <p className="text-2xl font-bold text-slate-900">
+                  {loading ? '...' : servers.filter(s => s.status === 'running').length}
+                </p>
               </div>
               <div className="bg-blue-100 p-3 rounded-lg">
                 <Server className="h-6 w-6 text-blue-600" />
@@ -144,59 +151,69 @@ export default function DashboardPage() {
           </div>
           
           <div className="divide-y divide-slate-200">
-            {servers.map((server) => (
-              <div key={server.id} className="p-6 hover:bg-slate-50 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className={`p-3 rounded-lg ${server.type === 'github' ? 'bg-slate-100' : 'bg-blue-100'}`}>
-                      {server.type === 'github' ? (
-                        <Github className="h-6 w-6 text-slate-600" />
-                      ) : (
+            {loading ? (
+              <div className="p-6 text-center text-slate-600">Loading servers...</div>
+            ) : servers.length === 0 ? (
+              <div className="p-6 text-center text-slate-600">
+                No servers created yet. Visit the servers page to create your first server.
+              </div>
+            ) : (
+              servers.map((server) => (
+                <div key={server.id} className="p-6 hover:bg-slate-50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="p-3 rounded-lg bg-blue-100">
                         <Server className="h-6 w-6 text-blue-600" />
-                      )}
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-slate-900">{server.name}</h3>
-                      <div className="flex items-center space-x-4 text-sm text-slate-600 mt-1">
-                        <span className="flex items-center gap-1">
-                          <div className={`w-2 h-2 rounded-full ${server.status === 'running' ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                          {server.status}
-                        </span>
-                        <span>Last active: {server.lastActive}</span>
-                        <span>Requests: {server.requests}</span>
-                        <span>Uptime: {server.uptime}</span>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-slate-900">{server.name}</h3>
+                        <div className="flex items-center space-x-4 text-sm text-slate-600 mt-1">
+                          <span className="flex items-center gap-1">
+                            <div className={`w-2 h-2 rounded-full ${
+                              server.status === 'running' ? 'bg-green-500' : 
+                              server.status === 'starting' ? 'bg-yellow-500' :
+                              server.status === 'error' ? 'bg-red-500' : 'bg-gray-500'
+                            }`}></div>
+                            {server.status}
+                          </span>
+                          {server.port && <span>Port: {server.port}</span>}
+                          {server.template && <span>Type: {server.template.name}</span>}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => toggleServer(server.id)}
-                      className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
-                        server.status === 'running'
-                          ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                          : 'bg-green-100 text-green-700 hover:bg-green-200'
-                      }`}
-                    >
-                      {server.status === 'running' ? (
-                        <>
-                          <Square className="h-4 w-4" />
-                          Stop
-                        </>
-                      ) : (
-                        <>
-                          <Play className="h-4 w-4" />
-                          Launch
-                        </>
-                      )}
-                    </button>
-                    <button className="p-2 text-slate-400 hover:text-slate-600 transition-colors">
-                      <Settings className="h-4 w-4" />
-                    </button>
+                    
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => toggleServer(server)}
+                        disabled={actionLoading === server.id || server.status === 'starting'}
+                        className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 disabled:opacity-50 ${
+                          server.status === 'running'
+                            ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                            : 'bg-green-100 text-green-700 hover:bg-green-200'
+                        }`}
+                      >
+                        {actionLoading === server.id ? (
+                          'Loading...'
+                        ) : server.status === 'running' ? (
+                          <>
+                            <Square className="h-4 w-4" />
+                            Stop
+                          </>
+                        ) : (
+                          <>
+                            <Play className="h-4 w-4" />
+                            Start
+                          </>
+                        )}
+                      </button>
+                      <button className="p-2 text-slate-400 hover:text-slate-600 transition-colors">
+                        <Settings className="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
 
