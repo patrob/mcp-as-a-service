@@ -28,6 +28,15 @@ const mockLoggedInSession = async (page: Page) => {
   });
 };
 
+const mockFeatureFlags = async (page: Page) => {
+  await page.addInitScript(() => {
+    (window as any).__FEATURE_FLAGS_OVERRIDE__ = {
+      'auth-enabled': true,
+      'dashboard-enabled': true,
+    };
+  });
+};
+
 const mockLoggedOutSession = async (page: Page) => {
   await page.route("**/api/auth/session", async (route) => {
     await route.fulfill({
@@ -50,6 +59,7 @@ const mockLoggedOutSession = async (page: Page) => {
 test("can sign in and sign out with GitHub", async ({ page }) => {
   await page.goto("/");
 
+  await mockFeatureFlags(page);
   await mockLoggedInSession(page);
   await page.reload();
   await expect(page.getByTestId("user-menu-trigger")).toBeVisible();
@@ -69,6 +79,7 @@ test("can sign in and sign out with GitHub", async ({ page }) => {
 test("can sign in and sign out with Google", async ({ page }) => {
   await page.goto("/");
 
+  await mockFeatureFlags(page);
   await mockLoggedInSession(page);
   await page.reload();
   await expect(page.getByTestId("user-menu-trigger")).toBeVisible();

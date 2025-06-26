@@ -42,10 +42,16 @@ export function useFeatureFlags() {
     };
   }, [ldClient]);
 
-  // Merge LaunchDarkly flags with defaults
+  // Check for test environment overrides
+  const testOverrides = typeof window !== 'undefined' 
+    ? (window as any).__FEATURE_FLAGS_OVERRIDE__ 
+    : undefined;
+
+  // Merge LaunchDarkly flags with defaults and test overrides
   const mergedFlags = {
     ...DEFAULT_FLAG_VALUES,
     ...flags,
+    ...testOverrides,
   };
 
   return {
