@@ -4,12 +4,35 @@ import { useState } from "react";
 import { Server, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { OAuthButton } from "@/components/OAuthButton";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  const handleEmailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    if (isLogin) {
+      // For now, since we don't have credentials provider set up,
+      // we'll just redirect to dashboard
+      // In a real app, you'd use signIn with credentials
+      router.push("/dashboard");
+    } else {
+      // Handle signup - for now just redirect to dashboard
+      router.push("/dashboard");
+    }
+
+    setIsLoading(false);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
@@ -54,7 +77,7 @@ export default function LoginPage() {
           </div>
 
           {/* Email Form */}
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleEmailSubmit}>
             {!isLogin && (
               <div>
                 <label
@@ -65,9 +88,11 @@ export default function LoginPage() {
                 </label>
                 <input
                   id="name"
+                  name="name"
                   type="text"
                   className="w-full px-3 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Enter your full name"
+                  required={!isLogin}
                 />
               </div>
             )}
@@ -81,9 +106,11 @@ export default function LoginPage() {
               </label>
               <input
                 id="email"
+                name="email"
                 type="email"
                 className="w-full px-3 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your email"
+                required
               />
             </div>
 
@@ -97,9 +124,11 @@ export default function LoginPage() {
               <div className="relative">
                 <input
                   id="password"
+                  name="password"
                   type={showPassword ? "text" : "password"}
                   className="w-full px-3 py-3 pr-10 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Enter your password"
+                  required
                 />
                 <button
                   type="button"
@@ -141,9 +170,16 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-medium hover:bg-blue-700 transition-colors"
+              disabled={isLoading}
+              className="w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLogin ? "Sign In" : "Create Account"}
+              {isLoading
+                ? isLogin
+                  ? "Signing in..."
+                  : "Creating account..."
+                : isLogin
+                ? "Sign In"
+                : "Create Account"}
             </button>
           </form>
 

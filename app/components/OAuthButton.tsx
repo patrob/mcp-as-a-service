@@ -28,7 +28,16 @@ export function OAuthButton({ provider, className = "" }: OAuthButtonProps) {
   const Icon = config.icon;
 
   const handleClick = async () => {
-    await signIn(config.providerId);
+    try {
+      console.log(`Attempting to sign in with ${config.providerId}`);
+      const result = await signIn(config.providerId, {
+        callbackUrl: "/dashboard",
+        redirect: true,
+      });
+      console.log("SignIn result:", result);
+    } catch (error) {
+      console.error("SignIn error:", error);
+    }
   };
 
   const buttonText = `Continue with ${config.label}`;
