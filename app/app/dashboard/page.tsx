@@ -8,8 +8,28 @@ import { useSession } from 'next-auth/react'
 import { SubscriptionInfo } from '@/components/SubscriptionInfo'
 import { UserMenu } from '@/components/UserMenu'
 import { fetchUserServers, startServer, stopServer, type ServerInstance } from '@/lib/servers'
+import { useDashboardEnabled } from '@/hooks/useFeatureFlags'
+import { ComingSoon } from '@/components/ComingSoon'
 
 export default function DashboardPage() {
+  const { isEnabled: dashboardEnabled, isLoading: flagsLoading } = useDashboardEnabled();
+  
+  // Show loading state while feature flags are being fetched
+  if (flagsLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // If dashboard is not enabled, show coming soon page
+  if (!dashboardEnabled) {
+    return <ComingSoon feature="dashboard" />;
+  }
   const { data: session, status } = useSession()
   const router = useRouter()
   const [servers, setServers] = useState<ServerInstance[]>([])

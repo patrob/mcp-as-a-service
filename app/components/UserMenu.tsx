@@ -8,9 +8,25 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
+import { useAuthEnabled } from '@/hooks/useFeatureFlags'
+import { FeatureNotAvailable } from '@/components/ComingSoon'
 
 export function UserMenu() {
   const { data: session } = useSession()
+  const { isEnabled: authEnabled, isLoading } = useAuthEnabled()
+  
+  // Show loading state while feature flags are being fetched
+  if (isLoading) {
+    return (
+      <div className="w-8 h-8 bg-slate-200 rounded-full animate-pulse"></div>
+    )
+  }
+  
+  // If auth is not enabled, don't show any auth-related UI
+  if (!authEnabled) {
+    return null
+  }
+  
   if (!session) {
     return (
       <Link
@@ -21,6 +37,7 @@ export function UserMenu() {
       </Link>
     )
   }
+  
   const user = session.user
   return (
     <DropdownMenu>

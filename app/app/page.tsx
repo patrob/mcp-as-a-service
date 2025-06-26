@@ -1,8 +1,12 @@
+'use client';
+
 import { Github, Server, Zap, Shield, Code, ArrowRight, Check } from 'lucide-react'
 import Link from 'next/link'
 import { UserMenu } from '@/components/UserMenu'
+import { useDashboardEnabled } from '@/hooks/useFeatureFlags'
 
 export default function HomePage() {
+  const { isEnabled: dashboardEnabled } = useDashboardEnabled();
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Navigation */}
@@ -24,9 +28,11 @@ export default function HomePage() {
                 About
               </Link>
               <UserMenu />
-              <Link href="/dashboard" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                Dashboard
-              </Link>
+              {dashboardEnabled && (
+                <Link href="/dashboard" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                  Dashboard
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -45,10 +51,17 @@ export default function HomePage() {
             custom server support, and seamless orchestration.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/dashboard" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-medium hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center justify-center gap-2">
-              Get Started Free
-              <ArrowRight className="h-5 w-5" />
-            </Link>
+            {dashboardEnabled ? (
+              <Link href="/dashboard" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-medium hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center justify-center gap-2">
+                Get Started Free
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            ) : (
+              <div className="bg-slate-100 text-slate-500 px-8 py-4 rounded-xl font-medium flex items-center justify-center gap-2 cursor-not-allowed">
+                Coming Soon
+                <Zap className="h-5 w-5" />
+              </div>
+            )}
             <Link href="/docs" className="border border-slate-300 text-slate-700 px-8 py-4 rounded-xl font-medium hover:bg-slate-50 transition-colors">
               View Documentation
             </Link>
@@ -135,9 +148,15 @@ export default function HomePage() {
                   Community support
                 </li>
               </ul>
-              <Link href="/dashboard" className="w-full bg-slate-100 text-slate-700 py-3 px-6 rounded-lg font-medium hover:bg-slate-200 transition-colors block">
-                Get Started
-              </Link>
+              {dashboardEnabled ? (
+                <Link href="/dashboard" className="w-full bg-slate-100 text-slate-700 py-3 px-6 rounded-lg font-medium hover:bg-slate-200 transition-colors block">
+                  Get Started
+                </Link>
+              ) : (
+                <div className="w-full bg-slate-100 text-slate-500 py-3 px-6 rounded-lg font-medium text-center cursor-not-allowed">
+                  Coming Soon
+                </div>
+              )}
             </div>
 
             {/* Pro Tier */}
@@ -209,10 +228,17 @@ export default function HomePage() {
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
             Join thousands of developers using MyMCP to build the next generation of AI applications.
           </p>
-          <Link href="/dashboard" className="bg-white text-blue-600 px-8 py-4 rounded-xl font-medium hover:bg-blue-50 transition-colors inline-flex items-center gap-2">
-            Start Building Today
-            <Code className="h-5 w-5" />
-          </Link>
+          {dashboardEnabled ? (
+            <Link href="/dashboard" className="bg-white text-blue-600 px-8 py-4 rounded-xl font-medium hover:bg-blue-50 transition-colors inline-flex items-center gap-2">
+              Start Building Today
+              <Code className="h-5 w-5" />
+            </Link>
+          ) : (
+            <div className="bg-white/20 text-white px-8 py-4 rounded-xl font-medium inline-flex items-center gap-2 cursor-not-allowed">
+              Coming Soon
+              <Zap className="h-5 w-5" />
+            </div>
+          )}
         </div>
       </section>
 

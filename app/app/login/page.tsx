@@ -6,8 +6,28 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { OAuthButton } from "@/components/OAuthButton";
+import { useAuthEnabled } from "@/hooks/useFeatureFlags";
+import { ComingSoon } from "@/components/ComingSoon";
 
 export default function LoginPage() {
+  const { isEnabled: authEnabled, isLoading: flagsLoading } = useAuthEnabled();
+  
+  // Show loading state while feature flags are being fetched
+  if (flagsLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // If auth is not enabled, show coming soon page
+  if (!authEnabled) {
+    return <ComingSoon feature="auth" />;
+  }
   const [showPassword, setShowPassword] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);

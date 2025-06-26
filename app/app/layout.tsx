@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import AuthProvider from '@/components/session-provider';
+import { LaunchDarklyProvider } from '@/components/LaunchDarklyProvider';
 
 export const metadata: Metadata = {
   title: 'MyMCP',
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <LaunchDarklyProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </LaunchDarklyProvider>
       </body>
     </html>
   );

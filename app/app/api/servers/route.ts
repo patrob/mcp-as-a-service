@@ -3,11 +3,18 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { MCPServerManager } from '@/lib/mcp-server-manager';
 import { DatabaseManager } from '@/lib/database';
+import { isDashboardEnabledServer } from '@/lib/launchdarkly-server';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
+    // Check if dashboard features are enabled
+    const dashboardEnabled = await isDashboardEnabledServer();
+    if (!dashboardEnabled) {
+      return NextResponse.json({ error: 'Dashboard features are not available' }, { status: 503 });
+    }
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -37,6 +44,12 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if dashboard features are enabled
+    const dashboardEnabled = await isDashboardEnabledServer();
+    if (!dashboardEnabled) {
+      return NextResponse.json({ error: 'Dashboard features are not available' }, { status: 503 });
+    }
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
