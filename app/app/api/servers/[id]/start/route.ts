@@ -31,7 +31,7 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = await getUserId(session.user.email, session.user.name);
+    const userId = await getUserId(session.user.email, session.user.name || undefined);
     if (!userId) {
       return NextResponse.json({ error: 'Failed to get user' }, { status: 500 });
     }

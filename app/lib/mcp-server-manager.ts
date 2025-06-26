@@ -91,7 +91,7 @@ export class MCPServerManager {
     // Validate required config
     const requiredConfig = serverTemplate.required_config || {};
     for (const [key, requirements] of Object.entries(requiredConfig)) {
-      if (requirements.required && !config[key]) {
+      if ((requirements as any)?.required && !config[key]) {
         throw new Error(`Missing required configuration: ${key}`);
       }
     }
