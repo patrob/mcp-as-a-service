@@ -17,4 +17,5 @@ jobs:
           docker compose up -d db
           sleep 10
           docker compose up flyway
+          touch .env
           docker compose down db
