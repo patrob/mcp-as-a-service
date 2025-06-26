@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Server, Github, Play, Square, Settings, Plus, Activity, Users, Database, Zap } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -13,6 +13,30 @@ import { ComingSoon } from '@/components/ComingSoon'
 
 export default function DashboardPage() {
   const { isEnabled: dashboardEnabled, isLoading: flagsLoading } = useDashboardEnabled();
+  const { data: session, status } = useSession()
+  const router = useRouter()
+  const [servers, setServers] = useState<ServerInstance[]>([])
+  const [loading, setLoading] = useState(true)
+  const [actionLoading, setActionLoading] = useState<number | null>(null)
+
+  const loadServers = useCallback(async () => {
+    try {
+      const data = await fetchUserServers()
+      setServers(data)
+    } catch (error) {
+      console.error('Failed to load servers:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/login')
+    } else if (status === 'authenticated') {
+      loadServers()
+    }
+  }, [status, router, loadServers])
   
   // Show loading state while feature flags are being fetched
   if (flagsLoading) {
@@ -29,22 +53,6 @@ export default function DashboardPage() {
   // If dashboard is not enabled, show coming soon page
   if (!dashboardEnabled) {
     return <ComingSoon feature="dashboard" />;
-  }
-  const { data: session, status } = useSession()
-  const router = useRouter()
-  const [servers, setServers] = useState<ServerInstance[]>([])
-  const [loading, setLoading] = useState(true)
-  const [actionLoading, setActionLoading] = useState<number | null>(null)
-
-  const loadServers = async () => {
-    try {
-      const data = await fetchUserServers()
-      setServers(data)
-    } catch (error) {
-      console.error('Error loading servers:', error)
-    } finally {
-      setLoading(false)
-    }
   }
 
   const toggleServer = async (server: ServerInstance) => {
@@ -64,14 +72,6 @@ export default function DashboardPage() {
       setActionLoading(null)
     }
   }
-
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.replace('/login')
-    } else if (status === 'authenticated') {
-      loadServers()
-    }
-  }, [status, router])
 
   if (status !== 'authenticated') {
     return null

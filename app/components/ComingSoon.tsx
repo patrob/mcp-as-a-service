@@ -41,7 +41,7 @@ export function ComingSoon({ feature, className = '' }: ComingSoonProps) {
           <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
             <h3 className="font-semibold text-slate-900 mb-2">Stay Updated</h3>
             <p className="text-sm text-slate-600 mb-4">
-              We'll notify you as soon as this feature becomes available.
+              We&apos;ll notify you as soon as this feature becomes available.
             </p>
             <div className="flex gap-2">
               <input 

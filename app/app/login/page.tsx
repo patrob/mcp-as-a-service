@@ -11,6 +11,10 @@ import { ComingSoon } from "@/components/ComingSoon";
 
 export default function LoginPage() {
   const { isEnabled: authEnabled, isLoading: flagsLoading } = useAuthEnabled();
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   
   // Show loading state while feature flags are being fetched
   if (flagsLoading) {
@@ -28,10 +32,6 @@ export default function LoginPage() {
   if (!authEnabled) {
     return <ComingSoon feature="auth" />;
   }
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const handleEmailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
