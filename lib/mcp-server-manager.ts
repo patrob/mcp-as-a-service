@@ -1,5 +1,6 @@
 import { DockerManager, ContainerConfig } from './docker';
 import { DatabaseManager } from './database';
+import { DockerOrchestrator } from './docker-orchestrator';
 
 export interface ServerTemplate {
   id: number;
@@ -29,15 +30,17 @@ export interface ServerInstance {
 
 export class MCPServerManager {
   private docker: DockerManager;
+  private dockerOrchestrator: DockerOrchestrator;
   private db: DatabaseManager;
 
   constructor() {
     this.docker = new DockerManager();
+    this.dockerOrchestrator = new DockerOrchestrator();
     this.db = new DatabaseManager();
   }
 
   async initialize(): Promise<void> {
-    await this.docker.ensureNetwork();
+    await this.dockerOrchestrator.initialize();
   }
 
   async getAvailableTemplates(): Promise<ServerTemplate[]> {
@@ -145,43 +148,31 @@ export class MCPServerManager {
       }
 
       const serverTemplate = template[0];
-      const port = await this.docker.findAvailablePort();
-
-      // Prepare environment variables
-      const env = Object.entries({
-        ...serverTemplate.environment_variables,
-        ...instance.config,
-        MCP_SERVER_PORT: port.toString()
-      }).map(([key, value]) => `${key}=${value}`);
-
-      // Prepare port bindings
-      const ports: Record<string, any> = {};
-      if (serverTemplate.exposed_ports && serverTemplate.exposed_ports.length > 0) {
-        const containerPort = serverTemplate.exposed_ports[0].container;
-        ports[`${containerPort}/tcp`] = [{ HostPort: port.toString() }];
-      }
-
-      const containerConfig: ContainerConfig = {
-        image: serverTemplate.docker_image,
-        name: `mcp-${instance.name}-${instanceId}`,
-        env,
-        ports,
-        labels: {
-          'mcp.instance.id': instanceId.toString(),
-          'mcp.instance.name': instance.name,
-          'mcp.user.id': userId.toString()
-        }
+      
+      // Convert database template to orchestrator template format
+      const orchestratorTemplate = {
+        dockerImage: serverTemplate.docker_image,
+        environmentVariables: serverTemplate.environment_variables || {},
+        exposedPorts: serverTemplate.exposed_ports || []
       };
 
-      const containerId = await this.docker.createContainer(containerConfig);
-      await this.docker.startContainer(containerId);
+      // Add MCP_SERVER_PORT to config
+      const config = {
+        ...instance.config
+      };
+
+      const { containerId, hostPort } = await this.dockerOrchestrator.createServerContainer(
+        `${instance.name}-${instanceId}`,
+        orchestratorTemplate,
+        config
+      );
 
       // Update database
       await this.db.query(`
         UPDATE server_instances 
         SET container_id = $1, port = $2, status = 'running', updated_at = CURRENT_TIMESTAMP
         WHERE id = $3
-      `, [containerId, port, instanceId]);
+      `, [containerId, hostPort, instanceId]);
 
     } catch (error) {
       await this.updateInstanceStatus(instanceId, 'error');
@@ -196,7 +187,7 @@ export class MCPServerManager {
     }
 
     try {
-      await this.docker.stopContainer(instance.containerId);
+      await this.dockerOrchestrator.stopContainer(instance.containerId);
       await this.updateInstanceStatus(instanceId, 'stopped');
     } catch (error) {
       await this.updateInstanceStatus(instanceId, 'error');
@@ -213,8 +204,7 @@ export class MCPServerManager {
     try {
       // Stop and remove container if it exists
       if (instance.containerId) {
-        await this.docker.stopContainer(instance.containerId);
-        await this.docker.removeContainer(instance.containerId, true);
+        await this.dockerOrchestrator.removeContainer(instance.containerId);
       }
 
       // Remove from database
@@ -259,7 +249,7 @@ export class MCPServerManager {
 
     for (const instance of instances) {
       try {
-        const containerInfo = await this.docker.getContainerInfo(instance.container_id);
+        const containerInfo = await this.dockerOrchestrator.getContainerStatus(instance.container_id);
         
         let newStatus = 'error';
         if (containerInfo) {

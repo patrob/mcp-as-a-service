@@ -13,12 +13,26 @@ const mockDockerManager = {
   getContainerLogs: vi.fn(),
 };
 
+const mockDockerOrchestrator = {
+  initialize: vi.fn(),
+  createServerContainer: vi.fn(),
+  startContainer: vi.fn(),
+  stopContainer: vi.fn(),
+  removeContainer: vi.fn(),
+  getContainerStatus: vi.fn(),
+  listManagedContainers: vi.fn(),
+};
+
 const mockDatabaseManager = {
   query: vi.fn(),
 };
 
 vi.mock('./docker', () => ({
   DockerManager: vi.fn(() => mockDockerManager),
+}));
+
+vi.mock('./docker-orchestrator', () => ({
+  DockerOrchestrator: vi.fn(() => mockDockerOrchestrator),
 }));
 
 vi.mock('./database', () => ({
@@ -40,7 +54,7 @@ describe('MCPServerManager', () => {
   describe('initialize', () => {
     it('should ensure Docker network exists', async () => {
       await manager.initialize();
-      expect(mockDockerManager.ensureNetwork).toHaveBeenCalled();
+      expect(mockDockerOrchestrator.initialize).toHaveBeenCalled();
     });
   });
 
@@ -206,30 +220,25 @@ describe('MCPServerManager', () => {
         .mockResolvedValueOnce([mockTemplate]) // Get template
         .mockResolvedValueOnce(undefined); // Update with container info
 
-      mockDockerManager.findAvailablePort.mockResolvedValue(3001);
-      mockDockerManager.createContainer.mockResolvedValue('container123');
+      mockDockerOrchestrator.createServerContainer.mockResolvedValue({
+        containerId: 'container123',
+        hostPort: 3001
+      });
 
       // Mock getServerInstance method
       vi.spyOn(manager, 'getServerInstance').mockResolvedValue(mockInstance as any);
 
       await manager.startServerInstance(1, 123);
 
-      expect(mockDockerManager.createContainer).toHaveBeenCalledWith({
-        image: 'mcp-github-server:latest',
-        name: 'mcp-test-server-1',
-        env: [
-          'NODE_ENV=production',
-          'github_token=token123',
-          'MCP_SERVER_PORT=3001',
-        ],
-        ports: { '3000/tcp': [{ HostPort: '3001' }] },
-        labels: {
-          'mcp.instance.id': '1',
-          'mcp.instance.name': 'test-server',
-          'mcp.user.id': '123',
+      expect(mockDockerOrchestrator.createServerContainer).toHaveBeenCalledWith(
+        'test-server-1',
+        {
+          dockerImage: 'mcp-github-server:latest',
+          environmentVariables: { NODE_ENV: 'production' },
+          exposedPorts: [{ container: 3000, protocol: 'tcp' }],
         },
-      });
-      expect(mockDockerManager.startContainer).toHaveBeenCalledWith('container123');
+        { github_token: 'token123' }
+      );
     });
 
     it('should not start if already running', async () => {
@@ -241,7 +250,7 @@ describe('MCPServerManager', () => {
 
       await manager.startServerInstance(1, 123);
 
-      expect(mockDockerManager.createContainer).not.toHaveBeenCalled();
+      expect(mockDockerOrchestrator.createServerContainer).not.toHaveBeenCalled();
     });
 
     it('should handle start errors and update status', async () => {
@@ -266,8 +275,7 @@ describe('MCPServerManager', () => {
         .mockResolvedValueOnce([mockTemplate]) // Get template
         .mockResolvedValueOnce(undefined); // Update status to error
       
-      mockDockerManager.findAvailablePort.mockResolvedValue(3001);
-      mockDockerManager.createContainer.mockRejectedValue(new Error('Docker error'));
+      mockDockerOrchestrator.createServerContainer.mockRejectedValue(new Error('Docker error'));
 
       await expect(manager.startServerInstance(1, 123)).rejects.toThrow('Docker error');
     });
@@ -284,7 +292,7 @@ describe('MCPServerManager', () => {
 
       await manager.stopServerInstance(1, 123);
 
-      expect(mockDockerManager.stopContainer).toHaveBeenCalledWith('container123');
+      expect(mockDockerOrchestrator.stopContainer).toHaveBeenCalledWith('container123');
     });
 
     it('should throw error if instance not found', async () => {
@@ -307,8 +315,7 @@ describe('MCPServerManager', () => {
 
       await manager.deleteServerInstance(1, 123);
 
-      expect(mockDockerManager.stopContainer).toHaveBeenCalledWith('container123');
-      expect(mockDockerManager.removeContainer).toHaveBeenCalledWith('container123', true);
+      expect(mockDockerOrchestrator.removeContainer).toHaveBeenCalledWith('container123');
       expect(mockDatabaseManager.query).toHaveBeenCalledWith(
         expect.stringContaining('DELETE FROM server_instances WHERE id = $1'),
         [1]
@@ -325,7 +332,7 @@ describe('MCPServerManager', () => {
 
       await manager.deleteServerInstance(1, 123);
 
-      expect(mockDockerManager.stopContainer).not.toHaveBeenCalled();
+      expect(mockDockerOrchestrator.removeContainer).not.toHaveBeenCalled();
       expect(mockDatabaseManager.query).toHaveBeenCalledWith(
         expect.stringContaining('DELETE FROM server_instances WHERE id = $1'),
         [1]
@@ -367,7 +374,7 @@ describe('MCPServerManager', () => {
       ];
 
       mockDatabaseManager.query.mockResolvedValue(mockInstances);
-      mockDockerManager.getContainerInfo
+      mockDockerOrchestrator.getContainerStatus
         .mockResolvedValueOnce({ status: 'exited' })
         .mockResolvedValueOnce({ status: 'running' });
 
@@ -389,7 +396,7 @@ describe('MCPServerManager', () => {
       ];
 
       mockDatabaseManager.query.mockResolvedValue(mockInstances);
-      mockDockerManager.getContainerInfo.mockRejectedValue(new Error('Docker error'));
+      mockDockerOrchestrator.getContainerStatus.mockRejectedValue(new Error('Docker error'));
 
       // Should not throw
       await expect(manager.syncContainerStatuses()).resolves.toBeUndefined();
