@@ -15,5 +15,7 @@ jobs:
       - name: Run Flyway migrations
         run: |
           docker compose up -d db
-          docker compose run --rm flyway
-          docker compose down
+          sleep 10
+          docker compose up flyway
+          touch .env
+          docker compose down db
