@@ -1,6 +1,23 @@
 # mcp-as-a-service
 Fun project for spinning up MCP servers as a service.
 
+## Prerequisites
+
+Before getting started, ensure you have the following installed:
+
+- **Node.js 22.x** (use `nvm` for version management)
+- **Docker** and **Docker Compose**
+- **Git**
+
+### Installing Node.js with nvm
+
+1. Install [nvm](https://github.com/nvm-sh/nvm) if you haven't already
+2. Use the correct Node.js version:
+   ```bash
+   nvm use
+   ```
+   This will automatically use Node.js 22.x as specified in `.nvmrc`
+
 ## Required environment variables
 
 Copy `.env.example` to `.env` and provide values for the following:
@@ -31,29 +48,51 @@ Create OAuth apps with GitHub and Google and record their client IDs and secrets
 
 Generate `NEXTAUTH_SECRET` using a command such as `openssl rand -base64 32`.
 
-## Setup
+## Getting Started
 
-1. Install Node dependencies in `app` with `npm install`.
-2. Run `docker compose up` to start Postgres, apply migrations and launch the `web` service.
-
-## Building and running
-
-Build the web container and start all services:
-
+### 1. Clone and Setup
 ```bash
-docker compose build
-docker compose up
+git clone <repository-url>
+cd mcp-as-a-service
+nvm use                    # Use correct Node.js version
+npm install               # Install dependencies
 ```
 
-Visit <http://localhost:3000> once the containers are running.
-
-## Starting the app
-
-Ensure the variables from your `.env` file are set, then run:
-
+### 2. Environment Configuration
 ```bash
-docker compose up
+cp .env.example .env      # Copy environment template
+```
+Edit `.env` and fill in the required values (see OAuth configuration section below).
+
+### 3. Start Development Environment
+```bash
+docker compose up         # Start database, migrations, and web service
 ```
 
 The application will be available at <http://localhost:3000>.
+
+## Development Commands
+
+All commands should be run with `nvm use` prefix to ensure correct Node.js version:
+
+### Core Development
+```bash
+nvm use && npm run dev     # Start development server
+nvm use && npm run build   # Build for production
+nvm use && npm run lint    # Run ESLint
+```
+
+### Testing
+```bash
+nvm use && npm run test               # Run unit tests
+nvm use && npm run test:e2e:setup     # Install Playwright browsers (first time only)
+nvm use && npm run test:e2e           # Run E2E tests
+```
+
+### Docker Development
+```bash
+docker compose build       # Build containers
+docker compose up         # Start all services
+docker compose down       # Stop all services
+```
 
