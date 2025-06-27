@@ -2,23 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { MCPServerManager } from '@/lib/mcp-server-manager';
-import { DatabaseManager } from '@/lib/database';
+import { UserRepository } from '@/lib/user-repository';
 
 export const dynamic = 'force-dynamic';
 
 async function getUserId(email: string, name?: string): Promise<number | null> {
-  const db = new DatabaseManager();
-  let [user] = await db.query('SELECT id FROM users WHERE email = $1', [email]);
-  
-  if (!user) {
-    // Create user if doesn't exist
-    [user] = await db.query(
-      'INSERT INTO users (username, email) VALUES ($1, $2) RETURNING id',
-      [name || email, email]
-    );
-  }
-  
-  return user?.id || null;
+  const userRepository = new UserRepository();
+  const user = await userRepository.findOrCreateUser(email, name);
+  return user.id;
 }
 
 export async function GET(

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { MCPServerManager } from '@/lib/mcp-server-manager';
-import { DatabaseManager } from '@/lib/database';
+import { UserRepository } from '@/lib/user-repository';
 import { isDashboardEnabledServer } from '@/lib/launchdarkly-server';
 
 export const dynamic = 'force-dynamic';
@@ -21,16 +21,8 @@ export async function GET() {
     }
 
     // Get or create user in database
-    const db = new DatabaseManager();
-    let [user] = await db.query('SELECT id FROM users WHERE email = $1', [session.user.email]);
-    
-    if (!user) {
-      // Create user if doesn't exist
-      [user] = await db.query(
-        'INSERT INTO users (username, email) VALUES ($1, $2) RETURNING id',
-        [session.user.name || session.user.email, session.user.email]
-      );
-    }
+    const userRepository = new UserRepository();
+    const user = await userRepository.findOrCreateUser(session.user.email, session.user.name || undefined);
 
     const manager = new MCPServerManager();
     const instances = await manager.getUserServerInstances(user.id);
@@ -62,16 +54,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Get or create user in database
-    const db = new DatabaseManager();
-    let [user] = await db.query('SELECT id FROM users WHERE email = $1', [session.user.email]);
-    
-    if (!user) {
-      // Create user if doesn't exist
-      [user] = await db.query(
-        'INSERT INTO users (username, email) VALUES ($1, $2) RETURNING id',
-        [session.user.name || session.user.email, session.user.email]
-      );
-    }
+    const userRepository = new UserRepository();
+    const user = await userRepository.findOrCreateUser(session.user.email, session.user.name || undefined);
 
     const manager = new MCPServerManager();
     const instance = await manager.createServerInstance(

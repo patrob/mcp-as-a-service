@@ -1,4 +1,5 @@
 import { DatabaseManager } from "./database";
+import { UserRepository } from "./user-repository";
 import Stripe from "stripe";
 
 export interface User {
@@ -12,10 +13,12 @@ export interface User {
 
 export class UserService {
   private db: DatabaseManager;
+  private userRepository: UserRepository;
   private stripe?: Stripe;
 
   constructor() {
     this.db = DatabaseManager.getInstance();
+    this.userRepository = new UserRepository();
     if (process.env.STRIPE_SECRET_KEY) {
       this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
         apiVersion: "2025-05-28.basil",
@@ -57,8 +60,15 @@ export class UserService {
   }
 
   async getUserByEmail(email: string): Promise<User | null> {
-    const [user] = await this.db.query("SELECT * FROM users WHERE email = $1", [
-      email,
+    // Use UserRepository for basic user retrieval, but return full User object with timestamps
+    const basicUser = await this.userRepository.findUserByEmail(email);
+    if (!basicUser) {
+      return null;
+    }
+
+    // Get full user details including timestamps
+    const [user] = await this.db.query("SELECT * FROM users WHERE id = $1", [
+      basicUser.id,
     ]);
     return user || null;
   }

@@ -10,6 +10,7 @@ import { isDashboardEnabledServer } from '@/lib/launchdarkly-server';
 vi.mock('next-auth/next');
 vi.mock('@/lib/mcp-server-manager');
 vi.mock('@/lib/database');
+vi.mock('@/lib/user-repository');
 vi.mock('@/lib/launchdarkly-server');
 
 describe('/api/servers', () => {
@@ -32,6 +33,10 @@ describe('/api/servers', () => {
     createServerInstance: vi.fn()
   };
 
+  const mockUserRepository = {
+    findOrCreateUser: vi.fn()
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
     
@@ -41,6 +46,10 @@ describe('/api/servers', () => {
     vi.mocked(DatabaseManager).mockImplementation(() => mockDatabaseManager as any);
     vi.mocked(MCPServerManager).mockImplementation(() => mockMCPServerManager as any);
     
+    // Add UserRepository import and mock
+    const { UserRepository } = await import('@/lib/user-repository');
+    vi.mocked(UserRepository).mockImplementation(() => mockUserRepository as any);
+    
     // Mock console methods
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });
@@ -48,7 +57,7 @@ describe('/api/servers', () => {
   describe('GET /api/servers', () => {
     it('should return servers for authenticated user', async () => {
       // Arrange
-      mockDatabaseManager.query.mockResolvedValue([mockUser]);
+      mockUserRepository.findOrCreateUser.mockResolvedValue(mockUser);
       mockMCPServerManager.getUserServerInstances.mockResolvedValue(mockInstances);
 
       // Act
@@ -58,9 +67,9 @@ describe('/api/servers', () => {
       // Assert
       expect(response.status).toBe(200);
       expect(data).toEqual({ instances: mockInstances });
-      expect(mockDatabaseManager.query).toHaveBeenCalledWith(
-        'SELECT id FROM users WHERE email = $1',
-        ['test@example.com']
+      expect(mockUserRepository.findOrCreateUser).toHaveBeenCalledWith(
+        'test@example.com',
+        'Test User'
       );
       expect(mockMCPServerManager.getUserServerInstances).toHaveBeenCalledWith(123);
     });
