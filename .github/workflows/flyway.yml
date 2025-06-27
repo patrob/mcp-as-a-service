@@ -1,21 +1,58 @@
-name: Flyway Migrations
+name: Database Migrations
 
 on:
   pull_request:
     paths:
       - 'flyway/**'
+  push:
+    branches: [main]
+    paths:
+      - 'flyway/**'
 
 jobs:
-  migrate:
+  validate-migrations:
+    name: Validate Database Migrations
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       - name: Set up Docker Compose
         run: docker compose --version
-      - name: Run Flyway migrations
+
+      - name: Create environment file
+        run: touch .env
+
+      - name: Start database
         run: |
           docker compose up -d db
-          sleep 10
-          docker compose up flyway
-          touch .env
-          docker compose down db
+          # Wait for database to be ready
+          timeout 60s bash -c 'until docker compose exec db pg_isready; do sleep 2; done'
+
+      - name: Run Flyway migrations
+        run: |
+          docker compose up --abort-on-container-exit flyway
+          
+      - name: Verify migration success
+        run: |
+          # Check if migrations completed successfully
+          if [ $? -eq 0 ]; then
+            echo "✅ Migrations completed successfully"
+          else
+            echo "❌ Migrations failed"
+            exit 1
+          fi
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker compose down
+          docker compose rm -f
