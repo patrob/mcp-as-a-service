@@ -2,7 +2,7 @@ name: Setup Node.js with Caching
 description: Set up Node.js with npm caching and dependency installation
 inputs:
   install-deps:
-    description: Whether to install dependencies (default: true)
+    description: 'Whether to install dependencies (default: true)'
     required: false
     default: 'true'
 runs:
