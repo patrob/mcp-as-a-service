@@ -33,3 +33,18 @@ Thumbs.db
 .idea/
 *.sublime-workspace
 *.sublime-project
+
+# Build artifacts
+build/
+dist/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# OS generated files
+ehthumbs.db
+Icon?
