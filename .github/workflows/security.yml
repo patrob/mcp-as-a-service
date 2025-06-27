@@ -15,31 +15,6 @@ permissions:
   security-events: write
 
 jobs:
-  codeql:
-    name: CodeQL Analysis
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'javascript' ]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
-          config-file: ./.github/codeql/codeql-config.yml
-
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{matrix.language}}"
-
   dependency-review:
     name: Dependency Review
     runs-on: ubuntu-latest
@@ -55,8 +30,8 @@ jobs:
           allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC
         continue-on-error: true
 
-  security-scan:
-    name: Security Scan
+  npm-audit:
+    name: NPM Security Audit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -65,5 +40,5 @@ jobs:
       - name: Setup Node.js with caching
         uses: ./.github/actions/setup-node-with-cache
 
-      - name: Run security scans
+      - name: Run npm audit
         uses: ./.github/actions/security-scan

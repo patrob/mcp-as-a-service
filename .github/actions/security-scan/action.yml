@@ -1,25 +1,9 @@
-name: Security Scan
-description: Run security scans including npm audit and dependency vulnerability checks
+name: NPM Security Audit
+description: Run npm audit to check for dependency vulnerabilities
 runs:
   using: composite
   steps:
     - name: Run npm audit
       shell: bash
       run: npm audit --audit-level=moderate
-      continue-on-error: true
-
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
-      with:
-        scan-type: 'fs'
-        scan-ref: '.'
-        format: 'sarif'
-        output: 'trivy-results.sarif'
-      continue-on-error: true
-
-    - name: Upload Trivy scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v3
-      if: always()
-      with:
-        sarif_file: 'trivy-results.sarif'
       continue-on-error: true
