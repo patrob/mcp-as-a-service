@@ -35,9 +35,14 @@ export const authOptions: NextAuthOptions = {
       }
 
       // Allows callback URLs on the same origin
-      if (new URL(url).origin === baseUrl) {
-        console.log("Redirecting to same origin URL:", url);
-        return url;
+      try {
+        if (new URL(url).origin === baseUrl) {
+          console.log("Redirecting to same origin URL:", url);
+          return url;
+        }
+      } catch (error) {
+        // Invalid URL format, fall through to default redirect
+        console.log("Invalid URL format, redirecting to dashboard:", url);
       }
 
       // Default redirect to dashboard
