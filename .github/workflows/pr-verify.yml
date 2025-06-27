@@ -9,24 +9,21 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: app
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version-file: "app/.nvmrc"
+          node-version-file: ".nvmrc"
           cache: "npm"
-          cache-dependency-path: app/package-lock.json
+          cache-dependency-path: package-lock.json
 
       # Additional caching for node_modules to speed up npm ci
       - name: Cache node_modules
         uses: actions/cache@v4
         id: cache-node-modules
         with:
-          path: app/node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('app/package-lock.json') }}
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-modules-
 
@@ -41,30 +38,27 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage
-          path: app/coverage
+          path: coverage
       - name: Build
         run: npm run build
 
   e2e:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: app
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version-file: "app/.nvmrc"
+          node-version-file: ".nvmrc"
           cache: "npm"
-          cache-dependency-path: app/package-lock.json
+          cache-dependency-path: package-lock.json
 
       # Cache node_modules for faster npm ci
       - name: Cache node_modules
         uses: actions/cache@v4
         id: cache-node-modules
         with:
-          path: app/node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('app/package-lock.json') }}
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-modules-
 

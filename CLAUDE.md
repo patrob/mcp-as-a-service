@@ -17,16 +17,15 @@ This is a Next.js SaaS application for running MCP (Model Context Protocol) serv
 
 ### Key Directories
 
-- `app/`: Next.js application root
-  - `app/`: App router pages and API routes
-  - `components/`: Reusable React components and UI components
-  - `lib/`: Core business logic (auth, servers, subscription, usage)
-  - `e2e/`: Playwright end-to-end tests
+- `app/`: App router pages and API routes
+- `components/`: Reusable React components and UI components
+- `lib/`: Core business logic (auth, servers, subscription, usage)
+- `e2e/`: Playwright end-to-end tests
 - `flyway/sql/`: Database migration files
 
 ## Development Commands
 
-All commands should be run from the `app/` directory with `nvm use` prefix to ensure correct Node.js version:
+All commands should be run from the root directory with `nvm use` prefix to ensure correct Node.js version:
 
 ### Core Development
 - `nvm use && npm run dev` - Start development server
