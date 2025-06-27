@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import { LDClient, initialize, LDOptions } from 'launchdarkly-react-client-sdk';
+import { LDClient, initialize, LDOptions } from "launchdarkly-react-client-sdk";
 
 // LaunchDarkly configuration
 export const launchDarklyConfig: LDOptions = {
   // Wait up to 3 seconds for flags before timing out
-  bootstrap: 'localStorage',
+  bootstrap: "localStorage",
   streaming: true,
 };
 
 // Default user context for anonymous users
 export const defaultUser = {
-  kind: 'user',
-  key: 'anonymous',
+  kind: "user",
+  key: "anonymous",
   anonymous: true,
 };
 
 // Feature flag keys - centralized for type safety
 export const FEATURE_FLAGS = {
-  AUTH_ENABLED: 'auth-enabled',
-  DASHBOARD_ENABLED: 'dashboard-enabled',
+  AUTH_ENABLED: "auth",
+  DASHBOARD_ENABLED: "dashboard",
 } as const;
 
 // Default flag values when LaunchDarkly is unavailable
@@ -32,8 +32,10 @@ export const DEFAULT_FLAG_VALUES = {
 export function getLaunchDarklyClientId(): string {
   const clientId = process.env.NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_ID;
   if (!clientId) {
-    console.warn('NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_ID not found. Feature flags will use default values.');
-    return '';
+    console.warn(
+      "NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_ID not found. Feature flags will use default values."
+    );
+    return "";
   }
   return clientId;
 }
@@ -42,7 +44,7 @@ export function getLaunchDarklyClientId(): string {
 export let ldClient: LDClient | null = null;
 
 export function initializeLaunchDarkly(): LDClient | null {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     // Server-side rendering - return null
     return null;
   }
@@ -56,7 +58,7 @@ export function initializeLaunchDarkly(): LDClient | null {
     ldClient = initialize(clientId, defaultUser, launchDarklyConfig);
     return ldClient;
   } catch (error) {
-    console.error('Failed to initialize LaunchDarkly:', error);
+    console.error("Failed to initialize LaunchDarkly:", error);
     return null;
   }
 }

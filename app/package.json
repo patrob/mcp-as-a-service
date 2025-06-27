@@ -74,7 +74,7 @@
     "sonner": "^1.5.0",
     "stripe": "^18.2.1",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss": "4.1.10",
+    "tailwindcss": "^4.1.11",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.2.2",
     "vaul": "^0.9.9",

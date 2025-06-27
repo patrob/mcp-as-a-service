@@ -22,6 +22,11 @@ export const authOptions: NextAuthOptions = {
     async redirect({ url, baseUrl }) {
       console.log("NextAuth redirect callback:", { url, baseUrl });
 
+      // Filter out Chrome DevTools or extension requests
+      if (url.includes("/.well-known/appspecific/com.chrome.devtools.json")) {
+        return baseUrl + "/dashboard";
+      }
+
       // Allows relative callback URLs
       if (url.startsWith("/")) {
         const redirectUrl = `${baseUrl}${url}`;
