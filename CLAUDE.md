@@ -137,3 +137,10 @@ All commands should be run from the root directory with `nvm use` prefix to ensu
 - Testing: Vitest + Playwright
 - Auth: NextAuth.js
 - Payments: Stripe
+
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
+NEVER create workflow documentation or README files in .github directories unless explicitly requested.

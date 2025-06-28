@@ -1,0 +1,9 @@
+name: NPM Security Audit
+description: Run npm audit to check for dependency vulnerabilities
+runs:
+  using: composite
+  steps:
+    - name: Run npm audit
+      shell: bash
+      run: npm audit --audit-level=moderate
+      continue-on-error: true
